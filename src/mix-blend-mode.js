@@ -3,7 +3,7 @@ const { addFilter } = wp.hooks;
 const { createHigherOrderComponent } = wp.compose;
 const { Fragment } = wp.element;
 const { InspectorControls } = wp.blockEditor;
-const { SelectControl, ToggleControl, Panel, PanelWrapperView, PanelBody, PanelRow } = wp.components;
+const { SelectControl } = wp.components;
 import {
   __experimentalToolsPanel as ToolsPanel,
   __experimentalToolsPanelItem as ToolsPanelItem,
