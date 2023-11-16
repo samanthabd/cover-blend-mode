@@ -1,0 +1,82 @@
+@use "sass:list";
+@use "sass:string";
+
+
+$mix-blend-modes: (
+  normal,
+  multiply,
+  screen,
+  overlay,
+  darken,
+  lighten,
+  color-dodge,
+  color-burn,
+  hard-light,
+  soft-light,
+  difference,
+  exclusion,
+  hue,
+  saturate,
+  color,
+  luminosity
+);
+
+
+
+$blocks: (
+ "cover"
+);
+
+@function get-selector($block, $attribute, $value, $children){
+
+  $selector: ".wp-block-#{$block}.#{$attribute}-#{$value}";
+
+  @if $children {
+    $children-selectors: ();
+    @each $child in $children {
+    @if $child == self {
+        $children-selectors: list.join($children-selectors, $selector);
+    }
+    @else {
+      $prefix: "";
+
+      @if string.index($child, "&"){
+        $prefix: ".wp-block-#{$block}";
+        $child: string.slice($child, 2, -1);
+      }
+
+      $children-selectors: list.join($children-selectors, $selector + " " + $prefix + $child, "comma");
+    }
+  }
+    $selector: $children-selectors;
+  }
+
+  @return $selector;
+};
+
+
+
+
+  @each $mode in $mix-blend-modes {
+    @each $block in $blocks {
+     #{get-selector($block, "has-mix-blend-mode", $mode, "&__background")} {
+         mix-blend-mode: $mode;
+     }
+
+     #{get-selector($block, "inner-container-has-mix-blend-mode", $mode, "&__inner-container")} {
+         mix-blend-mode: $mode;
+     }
+    }
+  }
+
+
+  .wp-block-cover {
+  &.is-full-width {
+    .wp-block-cover__inner-container {
+      //can't ovverride 'width: auto', trying to avoid !important
+      min-width: 100%;
+      max-width: 100%;
+
+    }
+  }
+}
